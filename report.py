@@ -4,8 +4,6 @@
 #                                                                              #
 # report                                                                       #
 #                                                                              #
-# version: 2014-01-29T1803                                                     #
-#                                                                              #
 ################################################################################
 #                                                                              #
 # LICENCE INFORMATION                                                          #
@@ -32,9 +30,11 @@
 #                                                                              #
 ################################################################################
 
+name    = "report"
+version = "2015-08-09T2053Z"
+
 import sys
 import os
-#from PyQt4 import QtGui
 from PyQt4 import QtGui
 from PyQt4.Qt import *
 from PyQt4.QtGui import *
@@ -44,11 +44,15 @@ class Report(QtGui.QMainWindow):
     def __init__(self):
         super(Report, self).__init__()
         # font database
-        fontDatabase = QtGui.QFontDatabase()
+        font_database = QtGui.QFontDatabase()
         # add font cmtex9
-        fontFile_cmtex9="cmtex9.ttf"
-        fontIdentifier_cmtex9 = QFontDatabase.addApplicationFont(fontFile_cmtex9)
-        fontFamilyName_cmtex9 = fontDatabase.applicationFontFamilies(fontIdentifier_cmtex9)[0]
+        font_file_cmtex9="cmtex9.ttf"
+        font_identifier_cmtex9 = QFontDatabase.addApplicationFont(
+            font_file_cmtex9
+        )
+        fontFamilyName_cmtex9 = font_database.applicationFontFamilies(
+            font_identifier_cmtex9
+        )[0]
         font_cmtex9 = QFont(fontFamilyName_cmtex9, 12)
         # add font Courier Prime
         font_CourierPrime = QFont("Courier Prime", 12)
@@ -56,64 +60,91 @@ class Report(QtGui.QMainWindow):
         font_current = font_cmtex9
         font_current.setFixedPitch(True)
         self.setFont(font_current)
-        self.initUI()
+        # set view
+        self.status_view = "window"
+        self.initialise_UI()
 
-    def initUI(self):
-        newAction = QtGui.QAction('new', self)
-        newAction.setShortcut('Ctrl+N')
-        newAction.setStatusTip('create new file')
-        newAction.triggered.connect(self.newFile)
+    def initialise_UI(self):
+        action_new = QtGui.QAction("new", self)
+        action_new.setShortcut("Ctrl+N")
+        action_new.setStatusTip("create new file")
+        action_new.triggered.connect(self.new_file)
 
-        saveAction = QtGui.QAction('save', self)
-        saveAction.setShortcut('Ctrl+S')
-        saveAction.setStatusTip('save current file')
-        saveAction.triggered.connect(self.saveFile)
+        action_save = QtGui.QAction("save", self)
+        action_save.setShortcut("Ctrl+S")
+        action_save.setStatusTip("save current file")
+        action_save.triggered.connect(self.save_file)
 
-        openAction = QtGui.QAction('open', self)
-        openAction.setShortcut('Ctrl+O')
-        openAction.setStatusTip('open a file')
-        openAction.triggered.connect(self.openFile)
+        action_open = QtGui.QAction("open", self)
+        action_open.setShortcut("Ctrl+O")
+        action_open.setStatusTip("open a file")
+        action_open.triggered.connect(self.openFile)
 
-        closeAction = QtGui.QAction('close', self)
-        closeAction.setShortcut('Ctrl+Q')
-        closeAction.setStatusTip('close report')
-        closeAction.triggered.connect(self.close)
+        action_close = QtGui.QAction("close", self)
+        action_close.setShortcut("Ctrl+Q")
+        action_close.setStatusTip("close report")
+        action_close.triggered.connect(self.close)
 
-        menuBar = self.menuBar()
-        fileMenu = menuBar.addMenu('&file')
-        fileMenu.addAction(newAction)
-        fileMenu.addAction(saveAction)
-        fileMenu.addAction(openAction)
-        fileMenu.addAction(closeAction)
+        action_toggle_view = QtGui.QAction("toggle view", self)
+        action_toggle_view.setShortcut("Ctrl+F")
+        action_toggle_view.setStatusTip("toggle fullscreen/window view")
+        action_toggle_view.triggered.connect(self.toggle_view)
+
+        menu_bar = self.menuBar()
+        file_menu = menu_bar.addMenu("&file")
+        file_menu.addAction(action_toggle_view)
+        file_menu.addAction(action_new)
+        file_menu.addAction(action_save)
+        file_menu.addAction(action_open)
+        file_menu.addAction(action_close)
 
         self.text = QtGui.QTextEdit(self)
 
         self.setCentralWidget(self.text)
         self.setGeometry(300, 300, 300, 300)
-        self.setWindowTitle('report')
+        self.showMaximized()
+        self.setWindowTitle("report")
         self.show()
 
-    def newFile(self):
+    def toggle_view(self):
+        if self.status_view == "window":
+            self.showFullScreen()
+            self.status_view = "fullscreen"
+            return
+        if self.status_view == "fullscreen":
+            self.showMaximized()
+            self.status_view = "window"
+            return
+
+    def new_file(self):
         self.text.clear()
 
-    def saveFile(self):
-        fileName = QtGui.QFileDialog.getSaveFileName(self, 'save file', os.getenv('HOME'))
-        file = open(fileName, 'w')
-        fileData = self.text.toPlainText()
-        file.write(fileData)
-        file.close()
+    def save_file(self):
+        filename = QtGui.QFileDialog.getsave_fileName(
+            self,
+            "save file",
+            os.getenv("HOME")
+        )
+        file_1 = open(filename, "w")
+        file_data = self.text.toPlainText()
+        file_1.write(file_data)
+        file_1.close()
 
     def openFile(self):
-        fileName = QtGui.QFileDialog.getOpenFileName(self, 'open file', os.getenv('HOME'))
-        file = open(fileName, 'r')
-        fileData = file.read()
-        self.text.setText(fileData)
-        file.close()
+        filename = QtGui.QFileDialog.getOpenFileName(
+            self,
+            "open file",
+            os.getenv("HOME")
+        )
+        file_1 = open(filename, "r")
+        file_data = file_1.read()
+        self.text.setText(file_data)
+        file_1.close()
 
 def main():
     application = QtGui.QApplication(sys.argv)
     report = Report()
     sys.exit(application.exec_())
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
