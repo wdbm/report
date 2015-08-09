@@ -31,9 +31,11 @@
 ################################################################################
 
 name    = "report"
-version = "2015-08-09T2226Z"
+version = "2015-08-09T2235Z"
 
 import sys
+reload(sys)  
+sys.setdefaultencoding("utf8")
 import os
 from PyQt4 import QtGui
 from PyQt4.Qt import *
@@ -102,7 +104,7 @@ class Report(QtGui.QMainWindow):
         action_open = QtGui.QAction("open", self)
         action_open.setShortcut("Ctrl+O")
         action_open.setStatusTip("open a file")
-        action_open.triggered.connect(self.openFile)
+        action_open.triggered.connect(self.open_file)
 
         action_close = QtGui.QAction("close", self)
         action_close.setShortcut("Ctrl+Q")
@@ -178,7 +180,7 @@ class Report(QtGui.QMainWindow):
         file_1.write(file_data)
         file_1.close()
 
-    def openFile(self):
+    def open_file(self):
         filename = QtGui.QFileDialog.getOpenFileName(
             self,
             "open file",
