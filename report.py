@@ -31,7 +31,7 @@
 ################################################################################
 
 name    = "report"
-version = "2015-08-09T2053Z"
+version = "2015-08-09T2209Z"
 
 import sys
 import os
@@ -43,28 +43,45 @@ class Report(QtGui.QMainWindow):
 
     def __init__(self):
         super(Report, self).__init__()
-        # font database
-        font_database = QtGui.QFontDatabase()
-        # add font cmtex9
-        font_file_cmtex9="cmtex9.ttf"
-        font_identifier_cmtex9 = QFontDatabase.addApplicationFont(
-            font_file_cmtex9
-        )
-        fontFamilyName_cmtex9 = font_database.applicationFontFamilies(
-            font_identifier_cmtex9
-        )[0]
-        font_cmtex9 = QFont(fontFamilyName_cmtex9, 12)
-        # add font Courier Prime
-        font_CourierPrime = QFont("Courier Prime", 12)
-        # set default font
-        font_current = font_cmtex9
-        font_current.setFixedPitch(True)
-        self.setFont(font_current)
         # set view
         self.status_view = "window"
+        # set font size
+        self.font_size = 22
+        # font database
+        self.font_database = QtGui.QFontDatabase()
+        # add font cmtex9
+        self.font_file_cmtex9="cmtex9.ttf"
+        self.font_identifier_cmtex9 = QFontDatabase.addApplicationFont(
+            self.font_file_cmtex9
+        )
+        self.fontFamilyName_cmtex9 = self.font_database.applicationFontFamilies(
+            self.font_identifier_cmtex9
+        )[0]
+        self.update_font()
+
         self.initialise_UI()
 
+    def update_font(self):
+        # add font cmtex9
+        self.font_cmtex9 = QFont(self.fontFamilyName_cmtex9, self.font_size)
+        # add font Courier Prime
+        self.font_CourierPrime = QFont("Courier Prime", self.font_size)
+        # set default font
+        self.font_current = self.font_cmtex9
+        self.font_current.setFixedPitch(True)
+        self.setFont(self.font_current)
+
     def initialise_UI(self):
+        action_toggle_view = QtGui.QAction("toggle view", self)
+        action_toggle_view.setShortcut("Ctrl+F")
+        action_toggle_view.setStatusTip("toggle fullscreen/window view")
+        action_toggle_view.triggered.connect(self.toggle_view)
+
+        action_set_font_size = QtGui.QAction("set font size", self)
+        action_set_font_size.setShortcut("Ctrl+T")
+        action_set_font_size.setStatusTip("set font size")
+        action_set_font_size.triggered.connect(self.set_font_size)
+
         action_new = QtGui.QAction("new", self)
         action_new.setShortcut("Ctrl+N")
         action_new.setStatusTip("create new file")
@@ -85,14 +102,10 @@ class Report(QtGui.QMainWindow):
         action_close.setStatusTip("close report")
         action_close.triggered.connect(self.close)
 
-        action_toggle_view = QtGui.QAction("toggle view", self)
-        action_toggle_view.setShortcut("Ctrl+F")
-        action_toggle_view.setStatusTip("toggle fullscreen/window view")
-        action_toggle_view.triggered.connect(self.toggle_view)
-
         menu_bar = self.menuBar()
         file_menu = menu_bar.addMenu("&file")
         file_menu.addAction(action_toggle_view)
+        file_menu.addAction(action_set_font_size)
         file_menu.addAction(action_new)
         file_menu.addAction(action_save)
         file_menu.addAction(action_open)
@@ -115,6 +128,17 @@ class Report(QtGui.QMainWindow):
             self.showMaximized()
             self.status_view = "window"
             return
+
+    def set_font_size(self):
+        print "set font size"
+        font_size, ok = QtGui.QInputDialog.getText(
+            self,
+            "font size", 
+            "enter font size:"
+        )
+        if ok:
+            self.font_size = int(font_size)
+            self.update_font()
 
     def new_file(self):
         self.text.clear()
