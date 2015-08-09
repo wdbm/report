@@ -31,7 +31,7 @@
 ################################################################################
 
 name    = "report"
-version = "2015-08-09T2209Z"
+version = "2015-08-09T2226Z"
 
 import sys
 import os
@@ -45,6 +45,8 @@ class Report(QtGui.QMainWindow):
         super(Report, self).__init__()
         # set view
         self.status_view = "window"
+        # set colours
+        self.status_colours = "light"
         # set font size
         self.font_size = 22
         # font database
@@ -77,6 +79,11 @@ class Report(QtGui.QMainWindow):
         action_toggle_view.setStatusTip("toggle fullscreen/window view")
         action_toggle_view.triggered.connect(self.toggle_view)
 
+        action_toggle_colours = QtGui.QAction("toggle colours", self)
+        action_toggle_colours.setShortcut("Ctrl+D")
+        action_toggle_colours.setStatusTip("toggle light/dark colours")
+        action_toggle_colours.triggered.connect(self.toggle_colours)
+
         action_set_font_size = QtGui.QAction("set font size", self)
         action_set_font_size.setShortcut("Ctrl+T")
         action_set_font_size.setStatusTip("set font size")
@@ -105,6 +112,7 @@ class Report(QtGui.QMainWindow):
         menu_bar = self.menuBar()
         file_menu = menu_bar.addMenu("&file")
         file_menu.addAction(action_toggle_view)
+        file_menu.addAction(action_toggle_colours)
         file_menu.addAction(action_set_font_size)
         file_menu.addAction(action_new)
         file_menu.addAction(action_save)
@@ -112,6 +120,9 @@ class Report(QtGui.QMainWindow):
         file_menu.addAction(action_close)
 
         self.text = QtGui.QTextEdit(self)
+        self.text.setStyleSheet(
+            "QTextEdit{color: #000000; background-color: #ffffff;}"
+        )
 
         self.setCentralWidget(self.text)
         self.setGeometry(300, 300, 300, 300)
@@ -129,8 +140,21 @@ class Report(QtGui.QMainWindow):
             self.status_view = "window"
             return
 
+    def toggle_colours(self):
+        if self.status_colours == "light":
+            self.text.setStyleSheet(
+                "QTextEdit{color: #ffffff; background-color: #000000;}"
+            )
+            self.status_colours == "dark"
+            return
+        if self.status_colours == "dark":
+            self.text.setStyleSheet(
+                "QTextEdit{color: #000000; background-color: #ffffff;}"
+            )
+            self.status_colours == "light"
+            return
+
     def set_font_size(self):
-        print "set font size"
         font_size, ok = QtGui.QInputDialog.getText(
             self,
             "font size", 
