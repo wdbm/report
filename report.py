@@ -31,7 +31,7 @@
 ################################################################################
 
 name    = "report"
-version = "2015-08-09T2235Z"
+version = "2015-09-11T1643Z"
 
 import sys
 reload(sys)  
@@ -170,7 +170,7 @@ class Report(QtGui.QMainWindow):
         self.text.clear()
 
     def save_file(self):
-        filename = QtGui.QFileDialog.getsave_fileName(
+        filename = QtGui.QFileDialog.getSaveFileName(
             self,
             "save file",
             os.getenv("HOME")
