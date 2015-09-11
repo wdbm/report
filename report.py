@@ -31,7 +31,7 @@
 ################################################################################
 
 name    = "report"
-version = "2015-09-11T1643Z"
+version = "2015-09-11T1649Z"
 
 import sys
 reload(sys)  
@@ -162,7 +162,7 @@ class Report(QtGui.QMainWindow):
             "font size", 
             "enter font size:"
         )
-        if ok:
+        if ok is True:
             self.font_size = int(font_size)
             self.update_font()
 
