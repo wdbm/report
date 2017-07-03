@@ -6,6 +6,7 @@ a small text editor
 
 ```Bash
 pip install wirereport
+```
 
 # run
 
