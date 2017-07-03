@@ -9,7 +9,7 @@ def main():
 
     setuptools.setup(
         name             = "wirereport",
-        version          = "2017.07.03.1427",
+        version          = "2017.07.03.1712",
         description      = "a small text editor",
         long_description = long_description(),
         url              = "https://github.com/wdbm/report",

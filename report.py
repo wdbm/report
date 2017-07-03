@@ -36,28 +36,39 @@
 import os
 import sys
 
-from PyQt4 import QtGui
-from PyQt4.Qt import *
-from PyQt4.QtGui import *
+from PyQt5.QtGui import(
+    QColor,
+    QFont,
+    QFontDatabase
+)
+from PyQt5.QtWidgets import(
+    QAction,
+    QApplication,
+    QFileDialog,
+    QInputDialog,
+    QMainWindow,
+    QTextEdit,
+    QWidget
+)
 
 name    = "report"
-version = "2017-07-03T1427Z"
+version = "2017-07-03T1712Z"
 
 def main():
 
-    application = QtGui.QApplication(sys.argv)
+    application = QApplication(sys.argv)
     report      = Report()
     sys.exit(application.exec_())
 
-class Report(QtGui.QMainWindow):
+class Report(QMainWindow):
 
     def __init__(self):
 
         super(Report, self).__init__()
-        self.status_view            = "window"
-        self.status_colours         = "light"
-        self.font_size              = 22
-        self.font_database          = QtGui.QFontDatabase()
+        self.status_view   = "window"
+        self.status_colors = "light"
+        self.font_size     = 22
+        self.font_database = QFontDatabase()
 
         # add font cmtex9
         self.font_file_cmtex9 = "cmtex9.ttf"
@@ -84,52 +95,52 @@ class Report(QtGui.QMainWindow):
 
     def initialise_UI(self):
 
-        action_toggle_view = QtGui.QAction("toggle view", self)
-        action_toggle_view.setShortcut("Ctrl+F")
+        action_toggle_view = QAction("toggle view", self)
+        action_toggle_view.setShortcut("F11")
         action_toggle_view.setStatusTip("toggle fullscreen/window view")
         action_toggle_view.triggered.connect(self.toggle_view)
 
-        action_toggle_colours = QtGui.QAction("toggle colours", self)
-        action_toggle_colours.setShortcut("Ctrl+D")
-        action_toggle_colours.setStatusTip("toggle light/dark colours")
-        action_toggle_colours.triggered.connect(self.toggle_colours)
+        action_toggle_colors = QAction("toggle colors", self)
+        action_toggle_colors.setShortcut("Ctrl+D")
+        action_toggle_colors.setStatusTip("toggle light/dark colors")
+        action_toggle_colors.triggered.connect(self.toggle_colors)
 
-        action_set_font_size = QtGui.QAction("set font size", self)
+        action_set_font_size = QAction("set font size", self)
         action_set_font_size.setShortcut("Ctrl+T")
         action_set_font_size.setStatusTip("set font size")
         action_set_font_size.triggered.connect(self.set_font_size)
 
-        action_new = QtGui.QAction("new", self)
+        action_new = QAction("new", self)
         action_new.setShortcut("Ctrl+N")
         action_new.setStatusTip("create new file")
         action_new.triggered.connect(self.new_file)
 
-        action_save = QtGui.QAction("save", self)
+        action_save = QAction("save", self)
         action_save.setShortcut("Ctrl+S")
         action_save.setStatusTip("save current file")
         action_save.triggered.connect(self.save_file)
 
-        action_open = QtGui.QAction("open", self)
+        action_open = QAction("open", self)
         action_open.setShortcut("Ctrl+O")
         action_open.setStatusTip("open a file")
         action_open.triggered.connect(self.open_file)
 
-        action_close = QtGui.QAction("close", self)
-        action_close.setShortcut("Ctrl+Q")
+        action_close = QAction("close", self)
+        action_close.setShortcut("Ctrl+W")
         action_close.setStatusTip("close report")
         action_close.triggered.connect(self.close)
 
         menu_bar = self.menuBar()
         file_menu = menu_bar.addMenu("&file")
         file_menu.addAction(action_toggle_view)
-        file_menu.addAction(action_toggle_colours)
+        file_menu.addAction(action_toggle_colors)
         file_menu.addAction(action_set_font_size)
         file_menu.addAction(action_new)
         file_menu.addAction(action_save)
         file_menu.addAction(action_open)
         file_menu.addAction(action_close)
 
-        self.text = QtGui.QTextEdit(self)
+        self.text = QTextEdit(self)
         self.text.setStyleSheet(
             """
             QTextEdit{
@@ -161,9 +172,9 @@ class Report(QtGui.QMainWindow):
 
             return
 
-    def toggle_colours(self):
+    def toggle_colors(self):
 
-        if self.status_colours == "light":
+        if self.status_colors == "light":
 
             self.text.setStyleSheet(
                 """
@@ -173,11 +184,11 @@ class Report(QtGui.QMainWindow):
                 }
                 """
             )
-            self.status_colours == "dark"
+            self.status_colors = "dark"
 
             return
 
-        if self.status_colours == "dark":
+        if self.status_colors == "dark":
 
             self.text.setStyleSheet(
                 """
@@ -187,13 +198,13 @@ class Report(QtGui.QMainWindow):
                 }
                 """
             )
-            self.status_colours == "light"
+            self.status_colors = "light"
 
             return
 
     def set_font_size(self):
 
-        font_size, ok = QtGui.QInputDialog.getText(
+        font_size, ok = QInputDialog.getText(
             self,
             "font size", 
             "enter font size:"
@@ -208,22 +219,26 @@ class Report(QtGui.QMainWindow):
 
     def save_file(self):
 
-        filename = QtGui.QFileDialog.getSaveFileName(
+        filename = QFileDialog.getSaveFileName(
             self,
             "save file",
             os.getenv("HOME")
-        )
-        with open(filename, "w") as file_save:
-            file_data = self.text.toPlainText()
-            file_save.write(file_data)
+        )[0]
+
+        if filename != u"":
+
+            with open(filename, "w") as file_save:
+                file_data = self.text.toPlainText()
+                file_save.write(file_data)
 
     def open_file(self):
 
-        filename = QtGui.QFileDialog.getOpenFileName(
+        filename = QFileDialog.getOpenFileName(
             self,
             "open file",
             os.getenv("HOME")
-        )
+        )[0]
+
         with open(filename, "r") as file_open:
             file_data = file_open.read()
             self.text.setText(file_data)
