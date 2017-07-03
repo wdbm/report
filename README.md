@@ -2,12 +2,13 @@
 
 a small text editor
 
-## quick start
+# setup
 
-### setup
+```Bash
+pip install wirereport
 
-Download all files for report.
+# run
 
-### run
-
-    report.py
+```Python
+report.py
+```

@@ -1,5 +1,7 @@
-#! /usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
+"""
 ################################################################################
 #                                                                              #
 # report                                                                       #
@@ -8,7 +10,7 @@
 #                                                                              #
 # LICENCE INFORMATION                                                          #
 #                                                                              #
-# The program report is a text editor.                                         #
+# This program is a small text editor.                                         #
 #                                                                              #
 # copyright (C) 2014 William Breaden Madden                                    #
 #                                                                              #
@@ -29,32 +31,36 @@
 # <http://www.gnu.org/licenses/>.                                              #
 #                                                                              #
 ################################################################################
+"""
 
-name    = "report"
-version = "2015-09-11T1649Z"
-
-import sys
-reload(sys)  
-sys.setdefaultencoding("utf8")
 import os
+import sys
+
 from PyQt4 import QtGui
 from PyQt4.Qt import *
 from PyQt4.QtGui import *
 
+name    = "report"
+version = "2017-07-03T1427Z"
+
+def main():
+
+    application = QtGui.QApplication(sys.argv)
+    report      = Report()
+    sys.exit(application.exec_())
+
 class Report(QtGui.QMainWindow):
 
     def __init__(self):
+
         super(Report, self).__init__()
-        # set view
-        self.status_view = "window"
-        # set colours
-        self.status_colours = "light"
-        # set font size
-        self.font_size = 22
-        # font database
-        self.font_database = QtGui.QFontDatabase()
+        self.status_view            = "window"
+        self.status_colours         = "light"
+        self.font_size              = 22
+        self.font_database          = QtGui.QFontDatabase()
+
         # add font cmtex9
-        self.font_file_cmtex9="cmtex9.ttf"
+        self.font_file_cmtex9 = "cmtex9.ttf"
         self.font_identifier_cmtex9 = QFontDatabase.addApplicationFont(
             self.font_file_cmtex9
         )
@@ -66,6 +72,7 @@ class Report(QtGui.QMainWindow):
         self.initialise_UI()
 
     def update_font(self):
+
         # add font cmtex9
         self.font_cmtex9 = QFont(self.fontFamilyName_cmtex9, self.font_size)
         # add font Courier Prime
@@ -76,6 +83,7 @@ class Report(QtGui.QMainWindow):
         self.setFont(self.font_current)
 
     def initialise_UI(self):
+
         action_toggle_view = QtGui.QAction("toggle view", self)
         action_toggle_view.setShortcut("Ctrl+F")
         action_toggle_view.setStatusTip("toggle fullscreen/window view")
@@ -123,7 +131,12 @@ class Report(QtGui.QMainWindow):
 
         self.text = QtGui.QTextEdit(self)
         self.text.setStyleSheet(
-            "QTextEdit{color: #000000; background-color: #ffffff;}"
+            """
+            QTextEdit{
+                color: #000000;
+                background-color: #ffffff;
+            }
+            """
         )
 
         self.setCentralWidget(self.text)
@@ -133,30 +146,53 @@ class Report(QtGui.QMainWindow):
         self.show()
 
     def toggle_view(self):
+
         if self.status_view == "window":
+
             self.showFullScreen()
             self.status_view = "fullscreen"
+
             return
+
         if self.status_view == "fullscreen":
+
             self.showMaximized()
             self.status_view = "window"
+
             return
 
     def toggle_colours(self):
+
         if self.status_colours == "light":
+
             self.text.setStyleSheet(
-                "QTextEdit{color: #ffffff; background-color: #000000;}"
+                """
+                QTextEdit{
+                    color: #ffffff;
+                    background-color: #000000;
+                }
+                """
             )
             self.status_colours == "dark"
+
             return
+
         if self.status_colours == "dark":
+
             self.text.setStyleSheet(
-                "QTextEdit{color: #000000; background-color: #ffffff;}"
+                """
+                QTextEdit{
+                    color: #000000;
+                    background-color: #ffffff;
+                }
+                """
             )
             self.status_colours == "light"
+
             return
 
     def set_font_size(self):
+
         font_size, ok = QtGui.QInputDialog.getText(
             self,
             "font size", 
@@ -167,34 +203,31 @@ class Report(QtGui.QMainWindow):
             self.update_font()
 
     def new_file(self):
+
         self.text.clear()
 
     def save_file(self):
+
         filename = QtGui.QFileDialog.getSaveFileName(
             self,
             "save file",
             os.getenv("HOME")
         )
-        file_1 = open(filename, "w")
-        file_data = self.text.toPlainText()
-        file_1.write(file_data)
-        file_1.close()
+        with open(filename, "w") as file_save:
+            file_data = self.text.toPlainText()
+            file_save.write(file_data)
 
     def open_file(self):
+
         filename = QtGui.QFileDialog.getOpenFileName(
             self,
             "open file",
             os.getenv("HOME")
         )
-        file_1 = open(filename, "r")
-        file_data = file_1.read()
-        self.text.setText(file_data)
-        file_1.close()
-
-def main():
-    application = QtGui.QApplication(sys.argv)
-    report = Report()
-    sys.exit(application.exec_())
+        with open(filename, "r") as file_open:
+            file_data = file_open.read()
+            self.text.setText(file_data)
 
 if __name__ == "__main__":
+
     main()

@@ -1,0 +1,7 @@
+include cmtex9.ttf
+include Courier_Prime.ttf
+include LICENSE
+include MANIFEST.in
+include README.md
+include report.py
+include setup.py
