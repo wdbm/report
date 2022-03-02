@@ -8,7 +8,7 @@ import setuptools
 def main():
     setuptools.setup(
         name             = 'wirereport',
-        version          = '2022.03.01.1545',
+        version          = '2022.03.02.0432',
         description      = 'a small text editor',
         long_description = long_description(),
         url              = 'https://github.com/wdbm/report',
