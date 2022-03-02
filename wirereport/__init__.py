@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 '''
@@ -52,9 +51,10 @@ from PyQt5.QtWidgets import(
 )
 
 name        = 'report'
-__version__ = '2022-03-02T0432Z'
+__version__ = '2022-03-02T1806Z'
 
 def main():
+    print(f'{name} {__version__}')
     application = QApplication(sys.argv)
     report      = Report()
     sys.exit(application.exec_())
@@ -72,17 +72,16 @@ class Report(QMainWindow):
         # set up fonts
         self.font_database = QFontDatabase()
         # add font cmtex9
-        self.font_file_cmtex9 = 'cmtex9.ttf'
+        self.font_file_cmtex9 = os.path.dirname(__file__) + '/fonts/cmtex9.ttf'
         self.font_identifier_cmtex9 = QFontDatabase.addApplicationFont(self.font_file_cmtex9)
         self.fontFamilyName_cmtex9 = self.font_database.applicationFontFamilies(self.font_identifier_cmtex9)[0]
         self.font_cmtex9 = QFont(self.fontFamilyName_cmtex9, self.font_size)
         # add font Courier Prime
-        self.font_CourierPrime = QFont('Courier Prime', self.font_size)
+        #self.font_CourierPrime = QFont('Courier Prime', self.font_size)
         # set default font
         self.fontFamilyName_current = 'cmtex9'
         self.font_current = self.font_cmtex9
         self.font_current.setFixedPitch(True)
-        self.setFont(self.font_current)
 
         self.initialise_UI()
 
