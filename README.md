@@ -7,11 +7,12 @@ a small text editor
 # setup
 
 ```Bash
+sudo apt install python3-pyqt5
 pip install wirereport
 ```
 
 # run
 
 ```Python
-report.py
+report
 ```

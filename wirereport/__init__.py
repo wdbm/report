@@ -51,7 +51,7 @@ from PyQt5.QtWidgets import(
 )
 
 name        = 'report'
-__version__ = '2022-03-02T1806Z'
+__version__ = '2022-03-02T1820Z'
 
 def main():
     print(f'{name} {__version__}')
